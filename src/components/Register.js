@@ -1,39 +1,34 @@
 import React, { useState } from 'react';
+import { register } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import './Form.css';   // ✅ import shared form styles
 
-const Register = () => {
+function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://mern-final-project-oroyinloye.onrender.com/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
+      const data = await register(name, email, password);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage('✅ Registration successful!');
-        setName('');
-        setEmail('');
-        setPassword('');
+      if (data.message === 'User registered successfully') {
+        alert('Registration successful! Please login.');
+        navigate('/login');
       } else {
-        setMessage(`❌ Error: ${data.message || 'Registration failed'}`);
+        alert(data.message || 'Registration failed');
       }
-    } catch (error) {
-      console.error('Network error:', error);
-      setMessage('❌ Network error. Please try again later.');
+    } catch (err) {
+      console.error(err);
+      alert('Network error');
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem' }}>
+    <div className="form-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -42,7 +37,6 @@ const Register = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
         />
         <input
           type="email"
@@ -50,21 +44,19 @@ const Register = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password (min 6 chars)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
         />
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>Register</button>
+        <button type="submit">Register</button>
       </form>
-      {message && <p style={{ marginTop: '1rem' }}>{message}</p>}
+      <p>Already have an account? <a href="/login">Login</a></p>
     </div>
   );
-};
+}
 
 export default Register;

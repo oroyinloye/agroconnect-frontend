@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
-import { loginUser } from '../utils/api';
+import { registerUser } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
+function Register() {
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const res = await loginUser(form);
-    if (res.token) {
-      localStorage.setItem('token', res.token); // store token
-      navigate('/dashboard'); // redirect to dashboard
+    const res = await registerUser(form);
+    if (res.message === 'User registered successfully') {
+      navigate('/login'); // redirect to login after registration
     } else {
-      alert(res.error || 'Login failed');
+      alert(res.error || 'Registration failed');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Name" onChange={handleChange} />
       <input name="email" placeholder="Email" onChange={handleChange} />
       <input name="password" type="password" placeholder="Password" onChange={handleChange} />
-      <button type="submit">Login</button>
+      <button type="submit">Register</button>
     </form>
   );
 }
 
-export default Login;
+export default Register;
