@@ -2,29 +2,30 @@
   "name": "agroconnect-frontend",
   "version": "1.0.0",
   "private": true,
-  "description": "AgroConnect frontend built with React",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "logrocket": "^10.1.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0",
-    "react-scripts": "^0.0.0",
-    "web-vitals": "^5.1.0"
+    "react-router-dom": "^6.28.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+  "react-scripts": "5.0.1",
+  "logrocket": "^10.1.0"
   },
-  "devDependencies": {
-    "eslint": "^8.57.0"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all" 
     ],
     "development": [
       "last 1 chrome version",
@@ -32,4 +33,5 @@
       "last 1 safari version"
     ]
   }
-}
+} 
+
