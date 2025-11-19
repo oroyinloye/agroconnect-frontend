@@ -1,17 +1,41 @@
-// agroconnect-frontend/src/utils/api.js
-const API_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = process.env.REACT_APP_API_URL;
 
-if (!API_URL) {
-  // Optional: warn so you catch missing env in builds
-  // console.warn('REACT_APP_API_URL is not set');
+// REGISTER
+export async function registerUser(name, email, password) {
+  const res = await fetch(`${BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  });
+  if (!res.ok) throw new Error(`Register failed: ${res.status}`);
+  return res.json();
 }
 
-export async function getExample() {
-  const res = await fetch(`${API_URL}/api/example`, {
-    headers: { 'Content-Type': 'application/json' }
+// LOGIN
+export async function loginUser(email, password) {
+  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
   });
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status}`);
+  if (!res.ok) throw new Error(`Login failed: ${res.status}`);
+  const data = await res.json();
+  if (data.token) {
+    localStorage.setItem('token', data.token);
   }
+  return data;
+}
+
+// PROFILE
+export async function getProfile() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
+  });
+  if (!res.ok) throw new Error(`Profile fetch failed: ${res.status}`);
   return res.json();
 }
